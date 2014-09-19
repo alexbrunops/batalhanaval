@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html >
+	<head>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="resources/css/index.css" />
+		
+		<title>Batalha Naval</title>
+	</head>
+	<body onload="loginCookie()">
+		<form onsubmit="return inicializarTabuleiro()">
+			<input type="number" id="numLinhas" required min="3" max="8" placeholder="Nº de linhas" />
+			<input type="number" id="numColunas" required min="3" max="8" placeholder="Nº de colunas" />
+			<input type="number" id="numTentativas" required min="1" max="64" placeholder="Nº de tentativas" />
+			<input type="submit" value="Criar" />
+			<input type="button" value="Ver Ranking" onclick="exibirRanking()"/>
+			<input type="button" value="Limpar Ranking" onclick="deleteCookie()"/>
+			<div id="barraDeInformacoes"></div>
+		</form>
+		
+		<div id="panel_fundo"></div>
+		
+		<div id="ranking">
+			<p id="tituloDoRanking"></p>
+			<table id="listaDoRanking">
+				<thead>
+					<tr>
+						<td>Data</td><td>Hora</td><td>Tamanho</td><td>Tentativas</td><td>Duração(seg.)</td>
+					</tr>
+				</thead>
+				<tbody id="corpoDaListaDoRanking"></tbody>
+			</table>
+			<input type="button" id="btnFecharRanking" value="Fechar Ranking" onclick="fecharRanking()"/>
+		</div>
+		
+		<table id="tabuleiro"></table>
+		
+		<script type="text/javascript" src="resources/js/index.js"></script>
+	</body>
+</html>
