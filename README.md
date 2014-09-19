@@ -2,6 +2,12 @@ MATC82 - Sistemas Web
 Batalha Naval
 ============
 
+## TO DO ##
+
+- Ranking
+
+============
+
 ## REQUISITOS ##
 
 Interface - Inputs de texto
@@ -39,7 +45,8 @@ Interface - Botões
 - Casa do tabuleiro
 - Cada casa terá uma imagem de fundo para representar o oceano
 - Explosão
-- Quando o usuário clicar em uma casa do tabuleiro deve ser exibida uma animação de explosão - Casa desabilitada
+- Quando o usuário clicar em uma casa do tabuleiro deve ser exibida uma animação de explosão
+- Casa desabilitada
 - Quando o usuário clica em uma casa do tabuleiro a mesma perde a opacidade dando a impressão de que está desabilitada
 - Submarino
 - Quando o usuário clicar na casa onde se encontra o submarino, o mesmo deve ser exibido nessa casa
