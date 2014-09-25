@@ -6,7 +6,11 @@ numTentativas,
 barraDeInformacoes;
 var posNavio, array = null;
 var venceu = false;
+var person;
 
+
+barraDeInformacoes = document.getElementById("barraDeInformacoes");
+    
 function inicializarTabuleiro(){
     var str = ""; 
     
@@ -14,15 +18,12 @@ function inicializarTabuleiro(){
 	numLinhas = document.getElementById("numLinhas").value;
 	numColunas = document.getElementById("numColunas").value;
 	numTentativas = document.getElementById("numTentativas").value;
-	barraDeInformacoes = document.getElementById("barraDeInformacoes");
-    
+	
     posNavio = [Math.floor(Math.random() * numLinhas), Math.floor(Math.random() * numColunas)];
     
-    console.log(numColunas);
-    console.log(numLinhas);
-    console.log(numTentativas);
-    console.log(barraDeInformacoes);
-	
+    venceu = false;
+	barraDeInformacoes.innerHTML = "";
+
 	for(var i = 0; i < numColunas ; i++){
         str += "<tr>";
         
@@ -54,9 +55,10 @@ function myFunction(e) {
                     e.setAttribute('class', 'com_submarino');
                 }, 1000);
                 barraDeInformacoes.innerHTML = 'Parabéns, você venceu!';
+                setCookie("tentativas", getCookie("tentativas") + ", " + numTentativas, 30);
                 venceu = true;
-                
                 return;
+
             } else { // errou
                 e.setAttribute('class', 'com_explosao');
                 setTimeout(function(){
@@ -81,18 +83,51 @@ function myFunction(e) {
 }
 
 function exibirRanking(){
-
+    var tentativas = getCookie("tentativas");
+    alert("Ranking of " + person + ":" + tentativas);
 }
 
+function setCookie(cname,cvalue,exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires=" + d.toGMTString();
+    document.cookie = cname+"="+cvalue+"; "+expires;
+}
+
+function getCookie(cname) {
+    var name = cname + "=";
+    var ca = document.cookie.split(';');
+    for(var i=0; i<ca.length; i++) {
+        
+        var c = ca[i];
+        while (c.charAt(0)==' ') c = c.substring(1);
+        if (c.indexOf(name) != -1) {
+
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
 
 function loginCookie() {
+person=getCookie("username");
+
+    if (person != "") {
+        barraDeInformacoes.innerHTML = "Welcome again " + person;
+    }
+    else{
+        person = prompt("Please enter your name :)", "Winner");
+
+        document.cookie="username=" + person + "; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
+        barraDeInformacoes.innerHTML = "Hello " + person + "! Lets play!";
+    }
 
 }
 
-function deleteCookie(){
-
-
-
-
-
+function deleteCookie() {
+    var date=new Date();
+    date.setDate(date.getDate()-1);
+    document.cookie = "username"+ "=''; expires=" + date + "; path=/";
+    document.cookie = "tentativas"+ "=''; expires=" + date + "; path=/";
+    barraDeInformacoes.innerHTML = 'Successfully erased!';
 }
