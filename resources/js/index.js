@@ -6,8 +6,7 @@ numTentativas,
 barraDeInformacoes;
 var posNavio, array = null;
 var venceu = false;
-var person;
-
+var person, total;
 
 barraDeInformacoes = document.getElementById("barraDeInformacoes");
     
@@ -19,6 +18,8 @@ function inicializarTabuleiro(){
 	numColunas = document.getElementById("numColunas").value;
 	numTentativas = document.getElementById("numTentativas").value;
 	
+    total = numTentativas;
+
     posNavio = [Math.floor(Math.random() * numLinhas), Math.floor(Math.random() * numColunas)];
     
     venceu = false;
@@ -41,7 +42,7 @@ function inicializarTabuleiro(){
 function myFunction(e) {
     var classname = e.className;
     var tdId = e.id;
-    
+
     if(venceu) {
         alert('Você já venceu o jogo!');
         return;
@@ -55,7 +56,16 @@ function myFunction(e) {
                     e.setAttribute('class', 'com_submarino');
                 }, 1000);
                 barraDeInformacoes.innerHTML = 'Parabéns, você venceu!';
-                setCookie("tentativas", getCookie("tentativas") + ", " + numTentativas, 30);
+                
+                if(getCookie("partida"))
+                    setCookie("partida",parseInt(getCookie("partida")) + 1);
+                else
+                    setCookie("partida", 1);
+                
+                var points = total - numTentativas + 1;
+                    
+                setCookie("tentativas", getCookie("tentativas") + " " + getCookie("partida") + "." + person + ": " + points + " tentativas!\n", 30);
+                    
                 venceu = true;
                 return;
 
@@ -84,7 +94,11 @@ function myFunction(e) {
 
 function exibirRanking(){
     var tentativas = getCookie("tentativas");
-    alert("Ranking of " + person + ":" + tentativas);
+    if(tentativas)
+    alert("************* Ranking *************** \n" + tentativas);
+    else
+    alert("************* Not yet! Play first! ***************");
+        
 }
 
 function setCookie(cname,cvalue,exdays) {
@@ -110,24 +124,23 @@ function getCookie(cname) {
 }
 
 function loginCookie() {
-person=getCookie("username");
-
-    if (person != "") {
+    person=getCookie("username");
+    
+    if (person) {
         barraDeInformacoes.innerHTML = "Welcome again " + person;
     }
     else{
         person = prompt("Please enter your name :)", "Winner");
 
-        document.cookie="username=" + person + "; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
+        document.cookie="username=" + person + "; expires=Thu, 18 Dec 3000 12:00:00 UTC; path=/";
         barraDeInformacoes.innerHTML = "Hello " + person + "! Lets play!";
     }
 
 }
 
 function deleteCookie() {
-    var date=new Date();
-    date.setDate(date.getDate()-1);
-    document.cookie = "username"+ "=''; expires=" + date + "; path=/";
-    document.cookie = "tentativas"+ "=''; expires=" + date + "; path=/";
+    document.cookie = encodeURIComponent("username") + "=deleted; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
+    document.cookie = encodeURIComponent("tentativas") + "=deleted; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
+    document.cookie = encodeURIComponent("partida") + "=deleted; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
     barraDeInformacoes.innerHTML = 'Successfully erased!';
 }
