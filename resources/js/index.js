@@ -3,12 +3,16 @@ posicaoDoNavio,
 numLinhas,
 numColunas,
 numTentativas,
-barraDeInformacoes;
+barraDeInformacoes,
+ranking;
 var posNavio, array = null;
 var venceu = false;
 var person, total;
+var dur, dataIni;
+var cookies, cookiesAll;
 
 barraDeInformacoes = document.getElementById("barraDeInformacoes");
+ranking = document.getElementById("ranking");
     
 function inicializarTabuleiro(){
     var str = ""; 
@@ -36,6 +40,8 @@ function inicializarTabuleiro(){
     
     tabuleiro.innerHTML = str;
     
+    dataIni = new Date();
+    
     return false;
 }
 
@@ -57,14 +63,19 @@ function myFunction(e) {
                 }, 1000);
                 barraDeInformacoes.innerHTML = 'Parabéns, você venceu!';
                 
-                if(getCookie("partida"))
-                    setCookie("partida",parseInt(getCookie("partida")) + 1);
-                else
-                    setCookie("partida", 1);
-                
                 var points = total - numTentativas + 1;
-                    
-                setCookie("tentativas", getCookie("tentativas") + " " + getCookie("partida") + "." + person + ": " + points + " tentativas!\n", 30);
+                var dataFinal = new Date();
+                
+                dur = dataFinal.getTime() - dataIni.getTime();
+                var seg = (dur/1000)%60;
+                
+                cookies = getCookie(person)+"<hidden><tr><td>"+dataFinal.toDateString()+"</td>"+
+                            "<td>"+dataIni.toTimeString()+"</td>"+
+                            "<td>"+numLinhas+'x'+numColunas+"</td>"+
+                            "<td>"+points+"</td>"+
+                            "<td>"+seg+"</td></tr>";
+                
+                setCookie(person, cookies, 30);
                     
                 venceu = true;
                 return;
@@ -93,12 +104,14 @@ function myFunction(e) {
 }
 
 function exibirRanking(){
-    var tentativas = getCookie("tentativas");
-    if(tentativas)
-    alert("************* Ranking *************** \n" + tentativas);
-    else
-    alert("************* Not yet! Play first! ***************");
-        
+    ranking.setAttribute('class', 'exibir');
+    var tentativas = getCookie(person);
+    document.getElementById('corpoDaListaDoRanking').innerHTML = tentativas;
+    
+}
+
+function fecharRanking() {
+    ranking.removeAttribute('class', 'exibir');
 }
 
 function setCookie(cname,cvalue,exdays) {
@@ -107,6 +120,13 @@ function setCookie(cname,cvalue,exdays) {
     var expires = "expires=" + d.toGMTString();
     document.cookie = cname+"="+cvalue+"; "+expires;
 }
+
+/*function setCookie(cname,date, time, size, tentativas, duracao,exdays) {
+    var d = new Date();
+    d.setTime(d.getTime() + (exdays*24*60*60*1000));
+    var expires = "expires=" + d.toGMTString();
+    document.cookie = cname+"="+cvalue+"; "+expires;
+}*/
 
 function getCookie(cname) {
     var name = cname + "=";
@@ -120,7 +140,8 @@ function getCookie(cname) {
             return c.substring(name.length, c.length);
         }
     }
-    return "";
+    return ""; 
+    
 }
 
 function loginCookie() {
@@ -132,7 +153,7 @@ function loginCookie() {
     else{
         person = prompt("Please enter your name :)", "Winner");
 
-        document.cookie="username=" + person + "; expires=Thu, 18 Dec 3000 12:00:00 UTC; path=/";
+        document.cookie="username=" + person + "; expires=Thu, 18 Dec 2015 12:00:00 UTC; path=/";
         barraDeInformacoes.innerHTML = "Hello " + person + "! Lets play!";
     }
 
@@ -140,7 +161,7 @@ function loginCookie() {
 
 function deleteCookie() {
     document.cookie = encodeURIComponent("username") + "=deleted; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
-    document.cookie = encodeURIComponent("tentativas") + "=deleted; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
-    document.cookie = encodeURIComponent("partida") + "=deleted; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
+    document.cookie = encodeURIComponent(person) + "=deleted; expires=Thu, 18 Dec 2013 12:00:00 UTC; path=/";
     barraDeInformacoes.innerHTML = 'Successfully erased!';
+    document.getElementById('corpoDaListaDoRanking').innerHTML = "";
 }
